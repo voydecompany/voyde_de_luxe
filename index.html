@@ -70,6 +70,37 @@
   h1{margin:0;font-family:"Playfair Display", serif;font-size:36px;letter-spacing:1px;font-weight:700}
   p.lead{color:var(--muted);margin-top:10px;line-height:1.5;max-width:680px}
 
+  .top-icons {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 16px; /* space so they never collide */
+    z-index: 9999; /* always stays above */
+}
+
+.icon {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+}
+
+/* Mobile-specific rules */
+@media (max-width: 480px) {
+    .top-icons {
+        top: 12px;
+        right: 12px;
+        gap: 14px;
+    }
+
+    .icon {
+        width: 24px;
+        height: 24px; /* Slightly smaller for small screens */
+    }
+}
+
+
   /* CATEGORIES */
   .cats{
     display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px;
@@ -262,6 +293,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- TOAST -->
 <div class="toast" id="toast" role="status" aria-live="polite">
