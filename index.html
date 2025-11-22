@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
+  
   :root{
     --bg:#ffffff;
     --muted:#777;
@@ -111,7 +112,7 @@
   }
   .cat{
     height:110px;border-radius:8px;overflow:hidden;position:relative;cursor:pointer;
-    display:flex;align-items:flex-end;padding:12px;background:#000;color:#fff;font-weight:700;
+    display:flex;align-items:flex-end;padding:12px;background:#000;color:#ffffff;font-weight:700;
     background-size:cover;background-position:center;font-size:15px;
   }
   .cat::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.45))}
@@ -253,7 +254,7 @@
 
   <!-- DESKTOP SIDEBAR -->
   <aside class="sidebar" id="desktopSidebar">
-    <div class="brand-side">MAISON R</div>
+    <div class="brand-side"></div>
     <nav>
       <ul class="side-list" id="navList">
         <li><button data-cat="home" class="active">Home</button></li>
@@ -287,7 +288,7 @@
       <div class="cat" data-cat="Bottoms" style="background-image:url('https://img.kwcdn.com/product/fancy/71bf09e4-e7c8-4558-b367-b35ab55e9272.jpg?imageMogr2/auto-orient%7CimageView2/2/w/800/q/70/format/webp')">Bottoms</div>
       <div class="cat" data-cat="Ethnic Wear" style="background-image:url('https://www.lashkaraa.com/cdn/shop/articles/indian-outfits-women.jpg?v=1686585849&width=2048')">Ethnic Wear</div>
       <div class="cat" data-cat="Activewear" style="background-image:url('https://cdn.shopify.com/s/files/1/1468/3848/files/B6_7e93cf63-bbd6-42ce-97e3-0c00d7608a46_480x480.jpg?v=1732264849')">Active Wear</div>
-      <div class="cat" data-cat="Intimates" style="background-image:url('https://i5.walmartimages.com/asr/da8239e1-2819-4535-85bb-755d91ac576d.36c3cdab0de34c1271b64b30bbc7741d.jpeg')">Intimates</div>
+      <div class="cat" data-cat="Intimates" style="background-image:url('https://lamourlingerie.com.au/cdn/shop/collections/533fc5de84977ac4090e5d57b435ded1--woman-pose-cotton-bralette.jpg?v=1668229270&width=1500')">Intimates</div>
       <div class="cat" data-cat="Footwear" style="background-image:url('https://5.imimg.com/data5/ANDROID/Default/2024/12/476928511/DR/PB/WZ/27306892/product-jpeg.jpg')">Footwear</div>
       <div class="cat" data-cat="Perfumes" style="background-image:url('https://hips.hearstapps.com/hmg-prod/images/img-3928-6810f244a05ad.jpg?crop=1.00xw:0.939xh;0,0.0466xh')">Perfume</div>
     </section>
@@ -388,7 +389,18 @@ const PRODUCTS = [
   { id: 't3', category:'Tops', title:'Ralph Lauren Shirt', price:3999, img:'https://i.etsystatic.com/20677552/r/il/5ac41c/6777513520/il_300x300.6777513520_5to1.jpg', desc:'Tailored shirtdress with subtle structure.'},
   { id: 't4', category:'Tops', title:'Ralph Lauren Silk Cami', price:2199, img:'https://dtcralphlauren.scene7.com/is/image/PoloGSI/s7-AI290932473003_alternate10?$rl_4x5_pdp$', desc:'Delicate silk cami for day-to-night looks.'},
   { id: 't5', category:'Tops', title:'Cashmere Lounge Set', price:8999, img:'https://akamai-scene7.frontgate.com/is/image/frontgate/T_Template?$UPDP_Hero_SM$&$src=frontgate/147168_main', desc:'Ultra-soft cashmere knit set.'},
-  { id: 'p1', category:'Perfumes', title:'Noir Eau de Parfum', price:5499, img:'https://images.unsplash.com/photo-1519741491513-5c7f3c9bcc5e?auto=format&fit=crop&w=1200&q=60', desc:'Warm amber floral — signature scent.'},
+  { id: 'b1', category:'Bottoms', title:'Pepe women jeans', price:2999, img:'https://media-photos.depop.com/b0/18364824/896271783_3e62d2672c6641e085b150e25c524a6a/P0.jpg', desc:'Vintage Women jean for casual outs and Roadtrips'},
+  { id: 'b2', category:'Bottoms', title:'Van Heusen trousers', price:3599, img:'https://rukminim2.flixcart.com/image/368/490/xif0q/trouser/a/5/t/38-lf-tr946-leriya-fashion-original-imahg3nguyhvag8z.jpeg?q=90&crop=false', desc:'Formal trousers for office, date night just to feel rich'},
+  { id: 'b3', category:'Bottoms', title:'H&M cotton mini skirt', price:4679, img:'https://image.hm.com/assets/hm/e5/85/e58514a778efafe210bd019de737cfe044ba46ed.jpg?imwidth=2160', desc:' Gathered seam over the hips and gathered tiers with rolled edges for added volume.'},
+  { id: 'd1', category:'Ethnic Wear', title:'Pernia Designer saree', price:75299, img:'https://img.perniaspopupshop.com/catalog/product/k/g/KGTC0424113_1.jpg?impolicy=listingimagenew', desc:' Accentuate with statement jewellery and heels for a wedding, sangeet or engagement ceremony.'},
+  { id: 'd2', category:'Ethnic Wear', title:'Masaba Nan Khatai Lehenga', price:8999, img:'https://www.houseofmasaba.com/cdn/shop/files/Untitled-2-12.jpg?v=1724160151', desc:' Adorned in the Chand-phool motifs that hugs the bottom of the lehenga, with an ornate fully embroidered blouse, the beauty of this lehenga is realised through the creamy and dreamy hue.'},
+  { id: 'a1', category:'Activewear', title:'Adidas Gym Wear', price:3499, img:'https://akns-images.eonline.com/eol_images/Entire_Site/20241130/rs_1200x1200-241230091035-new_year_workout_clothes_thumbnail.jpg?fit=around%7C1080:1080&output-quality=90&crop=1080:1080;center,top', desc:'Designed for hybrid training and versatile performance.'},
+  { id: 'i1', category:'Intimates', title:'Victoria secret lingerie set', price:6455, img:'https://assets.myntassets.com/dpr_1.5,q_30,w_400,c_limit,fl_progressive/assets/images/2025/NOVEMBER/4/dcCb3UUm_61baee29f74b42a08dd04fc84662a073.jpg', desc:'Comfort without trading off richness'},
+  { id: 'i2', category:'Intimates', title:'Calvin klein cotton sport innerwear', price:4399, img:'https://calvinklein-eu.scene7.com/is/image/CalvinKleinEU/0000F3787E_001_alternate2?$b2c_updp_m_mainImage_1920$', desc:'For high utilty feminine'},
+  { id: 'i3', category:'Intimates', title:'Marks and spencer strapless top intimate', price:5879, img:'https://assets.digitalcontent.marksandspencer.app/image/upload/w_600,h_780,q_auto,f_auto,e_sharpen/SD_02_T33_2740_Z0_X_EC_0', desc:'Experience unrestrained movement'},
+  { id: 'f1', category:'Footwear', title:'Yves Saint Laurent Heigh heels', price:134500, img:'https://assets.digitalcontent.marksandspencer.app/image/upload/w_600,h_780,q_auto,f_auto,e_sharpen/SD_02_T33_2740_Z0_X_EC_0', desc:'From the foremost fashion designers of the twentieth century'},
+  { id: 'f1', category:'Footwear', title:'The Robin Attico High knee boots', price:64589, img:'https://www.net-a-porter.com/variants/images/1647597338932800/fr/w2000_q60.jpg', desc:'meant for bold yet comfortable eleganc'},
+
 ]
 
 /* =========================
