@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-  
   :root{
     --bg:#ffffff;
     --muted:#777;
@@ -207,8 +206,6 @@
 </head>
 <body>
 
-
-
 <!-- TOPBAR -->
 <header class="topbar" role="banner">
   <div class="top-left">
@@ -219,7 +216,6 @@
   </div>
 
   <div class="top-right">
-    <button class="icon-btn" id="searchBtn" aria-label="Search">🔍</button>
     <button class="icon-btn" id="cartToggle" aria-label="Open cart">
       🛒
       <span class="cart-count" id="cartCount" style="display:none">0</span>
@@ -385,7 +381,7 @@
    ========================= */
 const PRODUCTS = [
   { id: 't1', category:'Tops', title:'ZARA Midi Dress', price:6799, img:'https://static.zara.net/assets/public/800a/adbc/4db247a38160/f7bdb3c7ac61/08730111330-a2/08730111330-a2.jpg?ts=1754557813277', desc:'Sleek bias-cut midi with silk finish and refined silhouette.'},
-  { id: 't2', category:'Tops', title:'Victori Secret Slip', price:4599, img:'https://martiansonly.com/cdn/shop/products/image_8705c850-a8d5-43df-a99b-683564765176_1024x1024@2x.jpg?v=1658600778', desc:'Minimal satin slip — effortless evening piece.'},
+  { id: 't2', category:'Tops', title:'Victoria Secret Slip', price:4599, img:'https://martiansonly.com/cdn/shop/products/image_8705c850-a8d5-43df-a99b-683564765176_1024x1024@2x.jpg?v=1658600778', desc:'Minimal satin slip — effortless evening piece.'},
   { id: 't3', category:'Tops', title:'Ralph Lauren Shirt', price:3999, img:'https://i.etsystatic.com/20677552/r/il/5ac41c/6777513520/il_300x300.6777513520_5to1.jpg', desc:'Tailored shirtdress with subtle structure.'},
   { id: 't4', category:'Tops', title:'Ralph Lauren Silk Cami', price:2199, img:'https://dtcralphlauren.scene7.com/is/image/PoloGSI/s7-AI290932473003_alternate10?$rl_4x5_pdp$', desc:'Delicate silk cami for day-to-night looks.'},
   { id: 't5', category:'Tops', title:'Cashmere Lounge Set', price:8999, img:'https://akamai-scene7.frontgate.com/is/image/frontgate/T_Template?$UPDP_Hero_SM$&$src=frontgate/147168_main', desc:'Ultra-soft cashmere knit set.'},
@@ -398,9 +394,8 @@ const PRODUCTS = [
   { id: 'i1', category:'Intimates', title:'Victoria secret lingerie set', price:6455, img:'https://assets.myntassets.com/dpr_1.5,q_30,w_400,c_limit,fl_progressive/assets/images/2025/NOVEMBER/4/dcCb3UUm_61baee29f74b42a08dd04fc84662a073.jpg', desc:'Comfort without trading off richness'},
   { id: 'i2', category:'Intimates', title:'Calvin klein cotton sport innerwear', price:4399, img:'https://calvinklein-eu.scene7.com/is/image/CalvinKleinEU/0000F3787E_001_alternate2?$b2c_updp_m_mainImage_1920$', desc:'For high utilty feminine'},
   { id: 'i3', category:'Intimates', title:'Marks and spencer strapless top intimate', price:5879, img:'https://assets.digitalcontent.marksandspencer.app/image/upload/w_600,h_780,q_auto,f_auto,e_sharpen/SD_02_T33_2740_Z0_X_EC_0', desc:'Experience unrestrained movement'},
-  { id: 'f1', category:'Footwear', title:'Yves Saint Laurent Heigh heels', price:134500, img:'https://assets.digitalcontent.marksandspencer.app/image/upload/w_600,h_780,q_auto,f_auto,e_sharpen/SD_02_T33_2740_Z0_X_EC_0', desc:'From the foremost fashion designers of the twentieth century'},
+  { id: 'f1', category:'Footwear', title:'Yves Saint Laurent Heigh heels', price:134500, img:'https://femi9byas.com/cdn/shop/files/CF8361FC-0A20-484D-B160-1EB36D6EE2F7.jpg?v=1743531786', desc:'From the foremost fashion designers of the twentieth century'},
   { id: 'f2', category:'Footwear', title:'The Robin Attico High knee boots', price:64589, img:'https://www.net-a-porter.com/variants/images/1647597338932800/fr/w2000_q60.jpg', desc:'meant for bold yet comfortable eleganc'},
-
 ]
 
 /* =========================
@@ -460,12 +455,25 @@ const openBottomCart = document.getElementById('openBottomCart');
 const mobileCartDrawer = document.getElementById('mobileCartDrawer');
 const mobileCartItems = document.getElementById('mobileCartItems');
 const mobileCartTotal = document.getElementById('mobileCartTotal');
-const openBottom = document.getElementById('openBottomCart');
 const closeMobileCart = document.getElementById('closeMobileCart');
 const mobileCheckout = document.getElementById('mobileCheckout');
 
 let modalQty = 1;
 let activeProduct = null;
+
+/* =========================
+   History / overlay stack
+   ========================= */
+let overlayStack = []; // tracks overlay names in order opened
+// centralize close actions in the popstate handler
+history.replaceState({ overlay: 'root' }, '', '');
+
+/* helper to push overlay state */
+function pushOverlay(name) {
+  // push a state object with the overlay id, so back button can close it
+  history.pushState({ overlay: name }, '', '');
+  overlayStack.push(name);
+}
 
 /* =========================
    Render products
@@ -512,7 +520,6 @@ navList.querySelectorAll('button').forEach(btn => {
     const cat = btn.dataset.cat;
     state.filter = cat === 'home' ? 'home' : cat;
     renderProducts();
-    // scroll to products area (account for topbar)
     setTimeout(()=> scrollToElement('#productGrid'), 30);
   });
 });
@@ -521,7 +528,6 @@ navList.querySelectorAll('button').forEach(btn => {
 mobileNav && mobileNav.querySelectorAll('button').forEach(btn => {
   btn.addEventListener('click', () => {
     activateNavButton(mobileNav, btn);
-    // also update desktop nav active state
     const matchBtn = [...navList.querySelectorAll('button')].find(b => b.dataset.cat === btn.dataset.cat);
     if(matchBtn){
       activateNavButton(navList, matchBtn);
@@ -529,7 +535,7 @@ mobileNav && mobileNav.querySelectorAll('button').forEach(btn => {
     const cat = btn.dataset.cat;
     state.filter = cat === 'home' ? 'home' : cat;
     renderProducts();
-    closeOffcanvas();
+    closeOffcanvasViaBack(); // close using history so popstate handles it
     setTimeout(()=> scrollToElement('#productGrid'), 30);
   });
 });
@@ -547,14 +553,31 @@ categories.querySelectorAll('.cat').forEach(tile => {
 });
 
 /* =========================
-   Sidebar offcanvas controls
+   Sidebar offcanvas controls (now use history)
    ========================= */
+function openOffcanvas() {
+  offcanvas.classList.add('open');
+  offOverlay.classList.add('show');
+  pushOverlay('offcanvas');
+}
+function closeOffcanvasImmediate() {
+  offcanvas.classList.remove('open');
+  offOverlay.classList.remove('show');
+}
+function closeOffcanvasViaBack() {
+  // trigger history back so popstate will call the immediate close
+  if (overlayStack[overlayStack.length - 1] === 'offcanvas') {
+    history.back();
+  } else {
+    closeOffcanvasImmediate();
+  }
+}
 menuToggle.addEventListener('click', () => {
-  offcanvas.classList.add('open'); offOverlay.classList.add('show');
+  // open offcanvas and push history
+  openOffcanvas();
 });
-closeOff.addEventListener('click', closeOffcanvas);
-offOverlay.addEventListener('click', closeOffcanvas);
-function closeOffcanvas(){ offcanvas.classList.remove('open'); offOverlay.classList.remove('show'); }
+closeOff.addEventListener('click', () => closeOffcanvasViaBack());
+offOverlay.addEventListener('click', () => closeOffcanvasViaBack());
 
 /* =========================
    Cart functions
@@ -614,49 +637,6 @@ function renderCart(){
     bottomCart.style.display = 'none';
   }
 
-  // BACK NAVIGATION HANDLING
-window.onpopstate = () => {
-  // If modal is open → close it
-  if (modal.style.display === "flex") {
-    modal.style.display = "none";
-    return;
-  }
-
-  // If cart is open → close it
-  if (cart.classList.contains("open")) {
-    cart.classList.remove("open");
-    return;
-  }
-
-  // If sidebar is open → close it
-  if (sidebar.classList.contains("open")) {
-    sidebar.classList.remove("open");
-    return;
-  }
-
-  // If none open → allow default back behavior
-};
-
-document.getElementById("menu-btn").onclick = () => {
-  sidebar.classList.add("open");
-  history.pushState({ sidebar: true }, "");
-};
-
-document.getElementById("cart-btn").onclick = () => {
-  cart.classList.add("open");
-  history.pushState({ cart: true }, "");
-};
-
-function openModal(i) {
-  currentProduct = products[i];
-  document.getElementById("modal-image").src = currentProduct.img;
-  document.getElementById("modal-title").innerText = currentProduct.name;
-  document.getElementById("modal-price").innerText = currentProduct.price;
-
-  modal.style.display = "flex";
-  history.pushState({ modal: true }, "");
-}
-
   // mobile drawer content
   mobileCartItems.innerHTML = '';
   if(state.cart.length === 0){
@@ -682,7 +662,7 @@ function openModal(i) {
 }
 
 /* =========================
-   Modal (product showcase)
+   Modal (product showcase) + history integration
    ========================= */
 function openProductModal(id){
   const p = PRODUCTS.find(x=>x.id===id);
@@ -697,15 +677,27 @@ function openProductModal(id){
   selectSize.value = 'M';
   modal.classList.add('open');
   modal.setAttribute('aria-hidden','false');
+  pushOverlay('modal:' + p.id); // push overlay with product id so it's unique in stack
 }
-modalClose.addEventListener('click', () => { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); });
+function closeModalImmediate(){
+  modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+}
+function closeModalViaBack(){
+  if (overlayStack.length && overlayStack[overlayStack.length-1] && overlayStack[overlayStack.length-1].startsWith('modal:')) {
+    history.back();
+  } else {
+    closeModalImmediate();
+  }
+}
+
+modalClose.addEventListener('click', () => closeModalViaBack());
 incQty.addEventListener('click', ()=>{ modalQty++; qtyVal.textContent = modalQty; });
 decQty.addEventListener('click', ()=>{ if(modalQty>1) modalQty--; qtyVal.textContent = modalQty; });
 
 modalAdd.addEventListener('click', () => {
   if(!activeProduct) return;
   addToCartById(activeProduct.id, modalQty, selectSize.value);
-  modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+  closeModalViaBack();
 });
 modalEnquire.addEventListener('click', ()=> {
   if(!activeProduct) return;
@@ -755,21 +747,35 @@ function doCheckout(){
 }
 
 /* =========================
-   Mobile cart drawer controls
+   Mobile cart drawer controls (history integrated)
    ========================= */
-openBottomCart.addEventListener('click', ()=> {
+function openMobileCart() {
   mobileCartDrawer.style.bottom = '0';
-});
-closeMobileCart.addEventListener('click', ()=> {
+  pushOverlay('mobileCart');
+}
+function closeMobileCartImmediate() {
   mobileCartDrawer.style.bottom = '-100%';
+}
+function closeMobileCartViaBack() {
+  if (overlayStack[overlayStack.length - 1] === 'mobileCart') {
+    history.back();
+  } else {
+    closeMobileCartImmediate();
+  }
+}
+
+openBottomCart.addEventListener('click', () => {
+  openMobileCart();
 });
+closeMobileCart.addEventListener('click', () => closeMobileCartViaBack());
+
 cartToggle.addEventListener('click', ()=> {
   // show desktop cart if wide, else open mobile cart
   if(window.innerWidth > 980){
-    // scroll to cart (or toggle visibility highlight)
+    // for desktop we just scroll to cart; no overlay push required
     document.getElementById('desktopCart').scrollIntoView({behavior:'smooth',block:'center'});
   } else {
-    mobileCartDrawer.style.bottom = '0';
+    openMobileCart();
   }
 });
 
@@ -778,8 +784,14 @@ cartToggle.addEventListener('click', ()=> {
    ========================= */
 window.addEventListener('resize', ()=> {
   if(window.innerWidth > 980){
-    offcanvas.classList.remove('open'); offOverlay.classList.remove('show');
-    mobileCartDrawer.style.bottom = '-100%';
+    // ensure mobile overlays are closed when switching to desktop viewport
+    if (overlayStack.includes('offcanvas')) {
+      // force-close without history (we're switching contexts)
+      closeOffcanvasImmediate();
+      overlayStack = overlayStack.filter(x => x !== 'offcanvas');
+      history.replaceState({ overlay: 'root' }, '', ''); // reset history state to root
+    }
+    closeMobileCartImmediate();
   }
 });
 
@@ -796,24 +808,50 @@ function scrollToElement(selector){
 }
 
 /* =========================
-   Keyboard: Esc closes modal and offcanvas
+   Keyboard: Esc closes modal and offcanvas (via history back)
    ========================= */
 document.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape'){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); closeOffcanvas(); mobileCartDrawer.style.bottom = '-100%'; }
+  if(e.key === 'Escape'){
+    // prefer to trigger back so popstate cleans stack consistently
+    if (overlayStack.length) {
+      history.back();
+    } else {
+      // nothing open
+      modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); closeOffcanvasImmediate(); closeMobileCartImmediate();
+    }
+  }
 });
 
 /* =========================
-   Initial render + loader hide
+   popstate: central handler to close overlays in LIFO order
    ========================= */
-function init(){
-  renderProducts();
-  renderCart();
-  // hide loader after a tiny delay so it looks smooth (simulate image loading)
-  setTimeout(()=> {
-    loader.style.display = 'none';
-  }, 700);
-}
-window.addEventListener('load', init);
+window.addEventListener('popstate', (event) => {
+  // if the overlay stack is empty or we returned to root -> ensure all overlays closed
+  if (!overlayStack.length) {
+    closeModalImmediate();
+    closeOffcanvasImmediate();
+    closeMobileCartImmediate();
+    return;
+  }
+
+  // pop the last opened overlay and close it
+  const last = overlayStack.pop();
+
+  if (!last) return;
+
+  if (last === 'offcanvas') {
+    closeOffcanvasImmediate();
+  } else if (last === 'mobileCart') {
+    closeMobileCartImmediate();
+  } else if (last.startsWith('modal:')) {
+    closeModalImmediate();
+  } else {
+    // fallback: close everything
+    closeModalImmediate();
+    closeOffcanvasImmediate();
+    closeMobileCartImmediate();
+  }
+});
 
 /* =========================
    Accessibility & small helpers
@@ -825,9 +863,9 @@ aboutBtn.forEach(b => b.addEventListener('click', ()=> setTimeout(()=> scrollToE
 /* Small improvement: auto-close offcanvas when product clicked on mobile */
 document.body.addEventListener('click', (e) => {
   if(window.innerWidth <= 980 && offcanvas.classList.contains('open')){
-    // if clicked outside offcanvas and not the toggle
     if(!offcanvas.contains(e.target) && !menuToggle.contains(e.target)) {
-      closeOffcanvas();
+      // close via history for consistent UX
+      closeOffcanvasViaBack();
     }
   }
 });
@@ -843,13 +881,12 @@ window.addEventListener('keydown', handleFirstTab);
 document.body.classList.add('using-mouse');
 
 /* small helper to close offcanvas after selecting category (already handled), but keep UX tight */
-function closeOffcanvas(){ offcanvas.classList.remove('open'); offOverlay.classList.remove('show'); }
+function closeOffcanvasImmediate(){ offcanvas.classList.remove('open'); offOverlay.classList.remove('show'); }
 
 /* =========================
    Initial state: attach mobile nav to desktop nav (ensures parity)
    ========================= */
 (function syncNavs(){
-  // copy active state from desktop to mobile
   const activeDesktop = navList.querySelector('button.active');
   if(activeDesktop && mobileNav){
     mobileNav.querySelectorAll('button').forEach(b => b.classList.remove('active'));
@@ -857,6 +894,19 @@ function closeOffcanvas(){ offcanvas.classList.remove('open'); offOverlay.classL
     if(match) match.classList.add('active');
   }
 })();
+
+/* =========================
+   Initial render + loader hide
+   ========================= */
+function init(){
+  renderProducts();
+  renderCart();
+  // hide loader after a tiny delay so it looks smooth (simulate image loading)
+  setTimeout(()=> {
+    loader.style.display = 'none';
+  }, 700);
+}
+window.addEventListener('load', init);
 
 </script>
 </body>
