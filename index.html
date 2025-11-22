@@ -399,7 +399,7 @@ const PRODUCTS = [
   { id: 'i2', category:'Intimates', title:'Calvin klein cotton sport innerwear', price:4399, img:'https://calvinklein-eu.scene7.com/is/image/CalvinKleinEU/0000F3787E_001_alternate2?$b2c_updp_m_mainImage_1920$', desc:'For high utilty feminine'},
   { id: 'i3', category:'Intimates', title:'Marks and spencer strapless top intimate', price:5879, img:'https://assets.digitalcontent.marksandspencer.app/image/upload/w_600,h_780,q_auto,f_auto,e_sharpen/SD_02_T33_2740_Z0_X_EC_0', desc:'Experience unrestrained movement'},
   { id: 'f1', category:'Footwear', title:'Yves Saint Laurent Heigh heels', price:134500, img:'https://assets.digitalcontent.marksandspencer.app/image/upload/w_600,h_780,q_auto,f_auto,e_sharpen/SD_02_T33_2740_Z0_X_EC_0', desc:'From the foremost fashion designers of the twentieth century'},
-  { id: 'f1', category:'Footwear', title:'The Robin Attico High knee boots', price:64589, img:'https://www.net-a-porter.com/variants/images/1647597338932800/fr/w2000_q60.jpg', desc:'meant for bold yet comfortable eleganc'},
+  { id: 'f2', category:'Footwear', title:'The Robin Attico High knee boots', price:64589, img:'https://www.net-a-porter.com/variants/images/1647597338932800/fr/w2000_q60.jpg', desc:'meant for bold yet comfortable eleganc'},
 
 ]
 
@@ -613,6 +613,49 @@ function renderCart(){
     cartCount.style.display = 'none';
     bottomCart.style.display = 'none';
   }
+
+  // BACK NAVIGATION HANDLING
+window.onpopstate = () => {
+  // If modal is open → close it
+  if (modal.style.display === "flex") {
+    modal.style.display = "none";
+    return;
+  }
+
+  // If cart is open → close it
+  if (cart.classList.contains("open")) {
+    cart.classList.remove("open");
+    return;
+  }
+
+  // If sidebar is open → close it
+  if (sidebar.classList.contains("open")) {
+    sidebar.classList.remove("open");
+    return;
+  }
+
+  // If none open → allow default back behavior
+};
+
+document.getElementById("menu-btn").onclick = () => {
+  sidebar.classList.add("open");
+  history.pushState({ sidebar: true }, "");
+};
+
+document.getElementById("cart-btn").onclick = () => {
+  cart.classList.add("open");
+  history.pushState({ cart: true }, "");
+};
+
+function openModal(i) {
+  currentProduct = products[i];
+  document.getElementById("modal-image").src = currentProduct.img;
+  document.getElementById("modal-title").innerText = currentProduct.name;
+  document.getElementById("modal-price").innerText = currentProduct.price;
+
+  modal.style.display = "flex";
+  history.pushState({ modal: true }, "");
+}
 
   // mobile drawer content
   mobileCartItems.innerHTML = '';
